@@ -38,3 +38,34 @@ Formato: fecha — decisión — motivo.
   Docker, así que `docker compose up -d` no pudo ejecutarse acá. Se verificó el resto (`pnpm install`,
   `prisma migrate dev`, `pnpm cli db:seed`, `pnpm test`, `lint`, `typecheck`) contra un PostgreSQL 16 nativo con las
   mismas credenciales (`viaje`/`viaje`, base `viaje`). En la máquina de Lucas el camino es `docker compose up -d`.
+
+## Cambio de alcance: solo scraping
+
+- **2026-09-28 — Lucas decidió no usar APIs de datos** (no tiene claves y el objetivo es scrapear). Consecuencias:
+  - La **Fase 1 (SerpApi Google Hotels, Tripadvisor Content API, Xotelo) queda descartada**, igual que el fallback Apify
+    de la Fase 6. No hay contadores de cupo ni columna de atribución de Tripadvisor.
+  - `SERPAPI_KEY`, `TRIPADVISOR_API_KEY` y `APIFY_TOKEN` salen de `.env.example` (el esquema de `.env` todavía los
+    acepta como opcionales, sin uso).
+  - `platforms` por defecto en `trip.config.example.json`: `["booking", "airbnb"]`.
+  - Se pierde la cobertura "multi-OTA" que daba Google Hotels vía SerpApi. Si hace falta, la alternativa sin APIs es
+    un scraper directo de Google Hotels (mismo patrón que Booking/Airbnb); queda como posible Fase 6.
+- **2026-09-28 — Nueva "Fase 1b": infraestructura de crawling + modo `capture`.** El entorno donde trabaja el agente no
+  llega a booking.com / airbnb.com (proxy de red), y de todas formas la regla 11 exige desarrollar contra fixtures.
+  Flujo: Lucas corre `pnpm cli capture -p booking` (y `-p airbnb`) **en su máquina** (IP residencial), que hace
+  1 búsqueda + 1 detalle, guarda el crudo en `data/captures/` (local) y una copia **sanitizada** en
+  `tests/fixtures/<plataforma>/`; esos fixtures se commitean y los parsers de las Fases 2 y 3 se escriben contra ellos.
+- **2026-09-28 — Sanitización de fixtures** (`src/crawl/sanitize.ts`): se reemplazan por `[REDACTED]` claves con pinta
+  de secreto (csrf, token, api_key, cookie, session…) y datos personales (nombres de anfitriones/autores, avatares,
+  texto de reseñas, emails). Nunca se guardan headers de request/response. `RawPayload` en Postgres guarda el crudo
+  completo porque la base es local.
+- **2026-09-28 — robots.txt:** 2xx → se aplican las reglas; 4xx → todo permitido; 5xx o error de red → bloqueado
+  (conservador). Se evalúa con el user-agent `viaje-alojamientos` (cae en el grupo `*`) y también antes de abrir el
+  detalle.
+- **2026-09-28 — Detección de bloqueo sobre el texto visible** (`innerText`), no sobre el HTML, para no confundir
+  scripts como `recaptcha.js` con un captcha real. Ante bloqueo: `session.retire()`, pausa de 4-8 s y reintento
+  (máx. 4, los de Crawlee); agotados → `BLOCKED`.
+- **2026-09-28 — Patchright 1.63 + Crawlee 3.18:** Patchright se pasa por `launchContext.launcher` (cast de tipos,
+  misma API que Playwright). `useFingerprints: false` porque Patchright recomienda no alterar UA/headers.
+  Se agregó `BROWSER_EXECUTABLE_PATH` (opcional) para usar otro Chromium/Chrome.
+- **2026-09-28 — Airbnb no recibe edades exactas**: la URL lleva `children` (≥ 2 años) e `infants` (< 2 años),
+  calculados desde `childAges`. Booking sí recibe un `age=` por niño.

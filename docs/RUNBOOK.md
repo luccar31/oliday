@@ -26,9 +26,36 @@ pnpm cli search --dry-run --check-in 2027-01-10 --check-out 2027-01-17 --child-a
 Imprime las plataformas y los parámetros de cada búsqueda (una por combinación de fechas). Errores de configuración
 salen con exit code `3` y el detalle de Zod.
 
+## Capturar fixtures reales (una vez por plataforma)
+
+Se corre **en tu máquina** (IP de casa, sin VPN). Hace 1 búsqueda con el destino y la primera combinación de fechas de
+`trip.config.json`, y abre el detalle del primer resultado. Tarda menos de un minuto.
+
+```bash
+pnpm exec patchright install chromium   # solo la primera vez
+pnpm cli capture -p booking
+pnpm cli capture -p airbnb
+# opcional: --headful para ver la ventana del navegador, --no-detail para solo la búsqueda
+```
+
+Salida:
+
+- `data/captures/<plataforma>/<fecha>/`: respuestas crudas completas (no se versiona).
+- `tests/fixtures/<plataforma>/`: copia sanitizada + `manifest.json` (estado, páginas, tipos de payload capturados).
+
+Revisá que `manifest.json` diga `"status": "OK"` y que `kinds` tenga varios `*.graphql.*`. Después:
+
+```bash
+git add tests/fixtures && git commit -m "fixtures: captura real de booking y airbnb" && git push
+```
+
+Si termina en `BLOCKED_BY_ROBOTS`, robots.txt del sitio no permite esa URL: el comando se detiene ahí. Cambiar
+`RESPECT_ROBOTS` es decisión tuya (ver `.env`). Si termina en `BLOCKED`, esperá unas horas y reintentá; no insistas en
+seguida.
+
 ## Correr una búsqueda
 
-_(Fase 1)_
+_(Fase 2)_
 
 ## Agendar snapshots
 
@@ -49,10 +76,6 @@ _(Fases 2-3)_
 ## Podar `RawPayload`
 
 _(Fase 5: `maintenance:prune`)_
-
-## Consultar el consumo de cupos (SerpApi / Tripadvisor)
-
-_(Fase 1)_
 
 ## Logs
 

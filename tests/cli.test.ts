@@ -32,7 +32,9 @@ const argv = (...args: string[]) => ['node', 'cli', ...args];
 describe('CLI', () => {
   it('registra los comandos de la Fase 0', () => {
     const names = createProgram().commands.map((c) => c.name());
-    expect(names).toEqual(expect.arrayContaining(['db:seed', 'search', 'export', 'compare', 'canary']));
+    expect(names).toEqual(
+      expect.arrayContaining(['db:seed', 'search', 'capture', 'export', 'compare', 'canary']),
+    );
   });
 
   it.each([['export'], ['compare'], ['canary']])(
@@ -50,7 +52,7 @@ describe('CLI', () => {
     expect(await run(argv('search', '--config', cfgPath, '--dry-run'))).toBe(0);
     const out = JSON.parse(String(vi.mocked(console.log).mock.calls[0]?.[0]));
     expect(out.params[0].childAges).toEqual([5]);
-    expect(out.platforms).toContain('GOOGLE_HOTELS');
+    expect(out.platforms).toEqual(['BOOKING', 'AIRBNB']);
   });
 
   it('search con config inexistente devuelve error de configuración', async () => {

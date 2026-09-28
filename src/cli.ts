@@ -12,12 +12,24 @@ import {
 } from './config.js';
 import { disconnectDb } from './db.js';
 import { getLogger } from './logger.js';
+import { writeCapture } from './capture/fixtures.js';
+import { CAPTURE_SPECS } from './capture/platforms.js';
+import { runCapture } from './capture/run.js';
 import { seedAmenities } from './seed.js';
 import { PLATFORM_KEY_LIST, type PlatformKey } from './types.js';
 
 /** Exit code para comandos cuya fase todavía no está implementada. */
 export const EXIT_NOT_IMPLEMENTED = 2;
 export const EXIT_CONFIG_ERROR = 3;
+/** La fuente terminó en BLOCKED / BLOCKED_BY_ROBOTS / FAILED. */
+export const EXIT_SOURCE_UNAVAILABLE = 4;
+
+export class SourceUnavailableError extends Error {
+  constructor(status: string) {
+    super(`la fuente terminó en ${status}`);
+    this.name = 'SourceUnavailableError';
+  }
+}
 
 export class NotImplementedError extends Error {
   constructor(command: string, phase: string) {
@@ -137,6 +149,52 @@ export function createProgram(): Command {
     });
 
   program
+    .command('capture')
+    .description(
+      'Captura mínima para fixtures: 1 búsqueda (+ 1 detalle) con navegador real; guarda el crudo en data/captures/ y una copia sanitizada en tests/fixtures/',
+    )
+    .addOption(
+      new Option('-p, --platform <platform>', 'plataforma')
+        .choices(Object.keys(CAPTURE_SPECS))
+        .makeOptionMandatory(),
+    )
+    .option('-c, --config <path>', 'archivo de configuración del viaje', DEFAULT_TRIP_CONFIG_PATH)
+    .option('--no-detail', 'no abrir el detalle del primer resultado')
+    .option('--headful', 'mostrar la ventana del navegador')
+    .action(
+      async (opts: {
+        platform: keyof typeof CAPTURE_SPECS;
+        config: string;
+        detail: boolean;
+        headful?: boolean;
+      }) => {
+        const env = loadEnv();
+        const cfg = loadTripConfig(opts.config);
+        const [params] = buildSearchParams(cfg);
+        if (!params) throw new ConfigError('dateOptions vacío');
+        const spec = CAPTURE_SPECS[opts.platform];
+        const res = await runCapture({
+          spec,
+          params,
+          respectRobots: env.RESPECT_ROBOTS,
+          ...(env.PROXY_URL && { proxyUrl: env.PROXY_URL }),
+          ...(env.BROWSER_EXECUTABLE_PATH && { executablePath: env.BROWSER_EXECUTABLE_PATH }),
+          headless: !opts.headful,
+          includeDetail: opts.detail,
+        });
+        const out = writeCapture({ platform: spec.platform, payloads: res.payloads, manifest: res.manifest });
+        console.log(
+          JSON.stringify(
+            { status: res.status, kinds: res.manifest.kinds, warnings: res.manifest.warnings, ...out },
+            null,
+            2,
+          ),
+        );
+        if (res.status !== 'OK' && res.status !== 'PARTIAL') throw new SourceUnavailableError(res.status);
+      },
+    );
+
+  program
     .command('export')
     .description('Exporta los datos capturados a ./exports/')
     .addOption(
@@ -177,6 +235,10 @@ export async function run(argv: string[]): Promise<number> {
     if (err instanceof NotImplementedError) {
       console.error(err.message);
       return EXIT_NOT_IMPLEMENTED;
+    }
+    if (err instanceof SourceUnavailableError) {
+      console.error(err.message);
+      return EXIT_SOURCE_UNAVAILABLE;
     }
     if (err instanceof ConfigError) {
       console.error(err.message);

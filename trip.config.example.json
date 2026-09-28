@@ -17,5 +17,5 @@
   ],
   "propertyTypes": ["HOTEL", "APARTMENT", "HOUSE", "CABIN"],
   "maxTotalPrice": null,
-  "platforms": ["google_hotels", "tripadvisor", "xotelo", "booking", "airbnb"]
+  "platforms": ["booking", "airbnb"]
 }

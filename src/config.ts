@@ -34,6 +34,7 @@ export const EnvSchema = z.object({
   TRIPADVISOR_API_KEY: optionalSecret,
   APIFY_TOKEN: optionalSecret,
   PROXY_URL: optionalSecret,
+  BROWSER_EXECUTABLE_PATH: optionalSecret,
   RESPECT_ROBOTS: booleanFlag(true),
   LOG_LEVEL: z
     .preprocess(

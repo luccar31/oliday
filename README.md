@@ -5,8 +5,8 @@ Herramienta **100 % local** para planificar un viaje en familia: dado un destino
 **precios** (noche y total), **disponibilidad** e **histórico de precios**, y los exporta a CSV/JSON con una vista
 comparativa.
 
-Todo corre en tu máquina: PostgreSQL en Docker, Node.js y Chromium locales. Los únicos servicios externos son APIs de
-datos (SerpApi, Tripadvisor Content API, Xotelo y, opcionalmente, Apify). Uso personal.
+Todo corre en tu máquina: PostgreSQL en Docker, Node.js y Chromium locales. **Solo scraping, sin APIs de terceros ni
+claves** (decisión del 2026-09-28, ver `docs/DECISIONS.md`). Uso personal.
 
 > Instrucciones de trabajo completas: [`AGENT_BRIEF.md`](AGENT_BRIEF.md). Operación diaria:
 > [`docs/RUNBOOK.md`](docs/RUNBOOK.md). Desvíos y decisiones: [`docs/DECISIONS.md`](docs/DECISIONS.md).
@@ -35,8 +35,11 @@ git clone <este-repo> viaje-alojamientos && cd viaje-alojamientos
 corepack enable
 pnpm install
 
-# 2. Variables de entorno (las claves de API se completan más adelante)
+# 2. Variables de entorno (no hace falta ninguna clave)
 cp .env.example .env
+
+# 2b. Navegador para el scraper (Chromium parcheado de Patchright)
+pnpm exec patchright install chromium
 
 # 3. Levantar PostgreSQL 16 local (crea la extensión pg_trgm)
 docker compose up -d
@@ -87,6 +90,7 @@ Opcionales: `maxResultsPerSearch` (60), `detailTopN` (20), `enableApifyFallback`
 ```bash
 pnpm cli db:seed                 # catálogo de amenities + alias (idempotente)
 pnpm cli search [opciones]       # búsqueda (ver --help)
+pnpm cli capture -p booking      # captura mínima (1 búsqueda + 1 detalle) → tests/fixtures/booking/
 pnpm cli export --format csv     # exportar a ./exports/
 pnpm cli compare                 # vista comparativa + exports/compare-<fecha>.csv
 pnpm cli canary                  # verificación de salud de extracción
@@ -94,7 +98,8 @@ pnpm cli canary                  # verificación de salud de extracción
 pnpm test | pnpm lint | pnpm typecheck | pnpm format
 ```
 
-Los comandos de fases aún no implementadas terminan con exit code `2`.
+Exit codes: `2` comando aún no implementado, `3` error de configuración, `4` la fuente terminó en `BLOCKED`,
+`BLOCKED_BY_ROBOTS` o `FAILED`.
 
 ## Estructura
 
