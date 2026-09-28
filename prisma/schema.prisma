@@ -1,0 +1,178 @@
+// Esquema de datos — ver AGENT_BRIEF.md sección 7.
+// Prisma 7: la URL de conexión vive en prisma.config.ts (no en este archivo).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Platform {
+  BOOKING
+  AIRBNB
+  GOOGLE_HOTELS
+  TRIPADVISOR
+  XOTELO
+  EXPEDIA
+  VRBO
+  AGODA
+  DESPEGAR
+}
+
+enum PropertyType {
+  HOTEL
+  APARTMENT
+  HOUSE
+  CABIN
+  HOSTEL
+  VILLA
+  OTHER
+}
+
+enum RunStatus {
+  RUNNING
+  OK
+  PARTIAL
+  BLOCKED
+  BLOCKED_BY_ROBOTS
+  FAILED
+}
+
+model Property {
+  id         String            @id @default(cuid())
+  name       String
+  type       PropertyType
+  lat        Float?
+  lng        Float?
+  address    String?
+  city       String
+  country    String
+  starRating Float?
+  listings   Listing[]
+  amenities  PropertyAmenity[]
+  createdAt  DateTime          @default(now())
+
+  @@index([city, country])
+}
+
+model Listing {
+  id           String            @id @default(cuid())
+  platform     Platform
+  externalId   String
+  url          String
+  propertyId   String?
+  property     Property?         @relation(fields: [propertyId], references: [id])
+  name         String?
+  rating       Float? // en la escala original
+  ratingScale  Float? // 5 o 10
+  rating10     Float? // normalizado 0-10
+  reviewCount  Int?
+  maxGuests    Int?
+  bedrooms     Int?
+  rawAmenities String[]
+  rawDetail    Json?
+  lastSeenAt   DateTime
+  snapshots    PriceSnapshot[]
+  calendar     AvailabilityDay[]
+
+  @@unique([platform, externalId])
+}
+
+model Amenity {
+  id         String            @id @default(cuid())
+  code       String            @unique
+  labelEs    String
+  category   String
+  isFamily   Boolean           @default(false)
+  aliases    AmenityAlias[]
+  properties PropertyAmenity[]
+}
+
+model AmenityAlias {
+  id        String   @id @default(cuid())
+  platform  Platform
+  rawLabel  String
+  amenityId String
+  amenity   Amenity  @relation(fields: [amenityId], references: [id])
+
+  @@unique([platform, rawLabel])
+}
+
+model PropertyAmenity {
+  propertyId String
+  amenityId  String
+  isFree     Boolean?
+  property   Property @relation(fields: [propertyId], references: [id])
+  amenity    Amenity  @relation(fields: [amenityId], references: [id])
+
+  @@id([propertyId, amenityId])
+}
+
+model SearchRun {
+  id          String          @id @default(cuid())
+  platform    Platform
+  destination String
+  checkIn     DateTime        @db.Date
+  checkOut    DateTime        @db.Date
+  adults      Int
+  childAges   Int[]
+  currency    String
+  status      RunStatus       @default(RUNNING)
+  stats       Json? // cantidades, warnings, duración
+  startedAt   DateTime        @default(now())
+  finishedAt  DateTime?
+  snapshots   PriceSnapshot[]
+  payloads    RawPayload[]
+}
+
+model RawPayload {
+  id          String    @id @default(cuid())
+  searchRunId String
+  searchRun   SearchRun @relation(fields: [searchRunId], references: [id])
+  platform    Platform
+  kind        String // ej. "booking.apollo", "booking.graphql.FullSearch", "serpapi.search"
+  url         String?
+  body        Json
+  capturedAt  DateTime  @default(now())
+
+  @@index([searchRunId, kind])
+}
+
+model PriceSnapshot {
+  id                BigInt    @id @default(autoincrement())
+  listingId         String
+  searchRunId       String
+  listing           Listing   @relation(fields: [listingId], references: [id])
+  searchRun         SearchRun @relation(fields: [searchRunId], references: [id])
+  checkIn           DateTime  @db.Date
+  checkOut          DateTime  @db.Date
+  nights            Int
+  roomName          String?
+  nightlyPrice      Decimal?  @db.Decimal(12, 2)
+  totalPrice        Decimal?  @db.Decimal(12, 2)
+  taxesIncluded     Boolean?
+  fees              Json?
+  currency          String
+  freeCancellation  Boolean?
+  breakfastIncluded Boolean?
+  provider          String? // para Google Hotels: "Booking.com", "Expedia", etc.
+  capturedAt        DateTime  @default(now())
+
+  @@index([listingId, checkIn, checkOut, capturedAt])
+}
+
+model AvailabilityDay {
+  listingId  String
+  date       DateTime @db.Date
+  available  Boolean
+  minNights  Int?
+  price      Decimal? @db.Decimal(12, 2)
+  currency   String?
+  capturedAt DateTime @default(now())
+  listing    Listing  @relation(fields: [listingId], references: [id])
+
+  @@id([listingId, date, capturedAt])
+}

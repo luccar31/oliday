@@ -1,0 +1,234 @@
+{
+  "$comment": "Alias por plataforma -> código del catálogo. La clave \"*\" aplica a todas las plataformas. Los labels se normalizan (minúsculas, sin espacios repetidos) al cargarse. Ampliar a medida que aparezcan labels reales en data/unmapped-amenities.json.",
+  "aliases": {
+    "wifi": {
+      "*": ["Wi-Fi", "WiFi", "Wifi", "Wi-Fi gratis", "WiFi gratis", "Free Wi-Fi", "Free WiFi", "Internet"],
+      "TRIPADVISOR": [
+        "Free High Speed Internet (WiFi)",
+        "Free internet",
+        "Internet gratis de alta velocidad (WiFi)"
+      ]
+    },
+    "pool": {
+      "*": [
+        "Pool",
+        "Piscina",
+        "Swimming pool",
+        "Outdoor pool",
+        "Indoor pool",
+        "Piscina al aire libre",
+        "Piscina cubierta",
+        "Pileta"
+      ],
+      "BOOKING": ["Outdoor swimming pool", "Indoor swimming pool", "1 swimming pool", "2 swimming pools"],
+      "AIRBNB": ["Shared pool", "Private pool", "Piscina compartida", "Piscina privada"]
+    },
+    "pool_kids": {
+      "*": ["Kids' pool", "Children's pool", "Kiddie pool", "Piscina para niños", "Piscina infantil"],
+      "TRIPADVISOR": ["Kids pool"]
+    },
+    "kitchen": {
+      "*": ["Kitchen", "Cocina", "Full kitchen", "Cocina completa"],
+      "GOOGLE_HOTELS": ["Kitchen in rooms", "Cocina en las habitaciones", "Cocina en la habitación"]
+    },
+    "kitchenette": {
+      "*": ["Kitchenette", "Cocina pequeña", "Zona de cocina", "Cocina americana"]
+    },
+    "washing_machine": {
+      "*": ["Washing machine", "Washer", "Lavadora", "Lavarropas"],
+      "AIRBNB": ["Free washer – In unit", "Free washer - In unit", "Lavadora gratuita en la unidad"]
+    },
+    "dryer": {
+      "*": ["Dryer", "Tumble dryer", "Secadora", "Secarropas"]
+    },
+    "air_conditioning": {
+      "*": ["Air conditioning", "Aire acondicionado", "Air-conditioned", "Climatizado"]
+    },
+    "heating": {
+      "*": ["Heating", "Calefacción", "Central heating", "Calefacción central"]
+    },
+    "parking": {
+      "*": [
+        "Parking",
+        "Estacionamiento",
+        "Parking ($)",
+        "Estacionamiento ($)",
+        "On-site parking",
+        "Aparcamiento",
+        "Cochera",
+        "Private parking",
+        "Parking privado"
+      ],
+      "BOOKING": ["Parking on site", "Parking en el establecimiento"]
+    },
+    "parking_free": {
+      "*": [
+        "Free parking",
+        "Estacionamiento gratuito",
+        "Estacionamiento gratis",
+        "Parking gratis",
+        "Parking gratuito"
+      ],
+      "AIRBNB": [
+        "Free parking on premises",
+        "Estacionamiento gratuito en las instalaciones",
+        "Free street parking",
+        "Estacionamiento gratuito en la calle"
+      ]
+    },
+    "breakfast_included": {
+      "*": [
+        "Breakfast included",
+        "Desayuno incluido",
+        "Free breakfast",
+        "Desayuno gratis",
+        "Desayuno gratuito"
+      ],
+      "BOOKING": ["Very good breakfast", "Excellent breakfast", "Desayuno muy bueno", "Desayuno excelente"]
+    },
+    "crib": {
+      "*": ["Crib", "Cot", "Cuna", "Baby cot", "Cuna para bebés", "Pack 'n play/Travel crib", "Cuna de viaje"]
+    },
+    "high_chair": {
+      "*": ["High chair", "Highchair", "Silla alta", "Trona", "Silla alta para niños", "Silla para bebé"]
+    },
+    "family_rooms": {
+      "*": ["Family rooms", "Habitaciones familiares", "Family room"],
+      "TRIPADVISOR": ["Family Rooms"]
+    },
+    "playground": {
+      "*": [
+        "Playground",
+        "Área de juegos",
+        "Parque infantil",
+        "Zona de juegos infantil",
+        "Outdoor play equipment for kids",
+        "Equipamiento de juegos al aire libre para niños",
+        "Indoor play area",
+        "Zona de juegos cubierta"
+      ]
+    },
+    "kids_club": {
+      "*": [
+        "Kids' club",
+        "Kids club",
+        "Club infantil",
+        "Club para niños",
+        "Kids activities",
+        "Actividades para niños"
+      ],
+      "TRIPADVISOR": ["Children Activities (Kid / Family Friendly)", "Kids Activities"]
+    },
+    "elevator": {
+      "*": ["Elevator", "Lift", "Ascensor"]
+    },
+    "accessible": {
+      "*": [
+        "Accessible",
+        "Accesible",
+        "Wheelchair accessible",
+        "Accesible en silla de ruedas",
+        "Facilities for disabled guests",
+        "Adaptado personas de movilidad reducida"
+      ]
+    },
+    "pets_allowed": {
+      "*": [
+        "Pets allowed",
+        "Pet-friendly",
+        "Se admiten mascotas",
+        "Se permiten mascotas",
+        "Admite mascotas",
+        "Apto para mascotas",
+        "Mascotas permitidas"
+      ]
+    },
+    "tv": {
+      "*": ["TV", "Televisión", "Flat-screen TV", "TV de pantalla plana", "Cable TV", "TV por cable"]
+    },
+    "balcony": {
+      "*": ["Balcony", "Balcón", "Patio or balcony", "Patio o balcón", "Terrace", "Terraza"]
+    },
+    "garden": {
+      "*": ["Garden", "Jardín", "Backyard", "Patio trasero"]
+    },
+    "bbq": {
+      "*": ["BBQ", "BBQ grill", "BBQ facilities", "Barbacoa", "Parrilla", "Zona de barbacoa", "Asador"]
+    },
+    "beach_access": {
+      "*": [
+        "Beach access",
+        "Acceso a la playa",
+        "Beachfront",
+        "Frente a la playa",
+        "Private beach area",
+        "Zona de playa privada",
+        "Beach access – Beachfront",
+        "Acceso a la playa: frente a la playa"
+      ]
+    },
+    "gym": {
+      "*": ["Gym", "Gimnasio", "Fitness centre", "Fitness center", "Centro de fitness"]
+    },
+    "spa": {
+      "*": ["Spa", "Spa and wellness centre", "Centro de spa y bienestar", "Spa y centro de bienestar"]
+    },
+    "restaurant": {
+      "*": ["Restaurant", "Restaurante"]
+    },
+    "bar": {
+      "*": ["Bar", "Bar/lounge", "Bar/salón"]
+    },
+    "room_service": {
+      "*": ["Room service", "Servicio a la habitación", "Servicio de habitaciones"]
+    },
+    "airport_shuttle": {
+      "*": [
+        "Airport shuttle",
+        "Traslado al aeropuerto",
+        "Traslado aeropuerto",
+        "Airport transportation",
+        "Servicio de traslado al aeropuerto"
+      ]
+    },
+    "smoke_free": {
+      "*": [
+        "Smoke-free property",
+        "Non-smoking rooms",
+        "Libre de humo",
+        "Habitaciones sin humo",
+        "Establecimiento libre de humo",
+        "Sin humo"
+      ]
+    },
+    "24h_reception": {
+      "*": ["24-hour front desk", "Recepción 24 horas", "24-hour reception", "Recepción abierta 24 horas"]
+    },
+    "fireplace": {
+      "*": ["Fireplace", "Indoor fireplace", "Chimenea", "Chimenea interior", "Hogar a leña"]
+    },
+    "workspace": {
+      "*": [
+        "Dedicated workspace",
+        "Workspace",
+        "Zona de trabajo",
+        "Espacio de trabajo",
+        "Espacio de trabajo exclusivo",
+        "Desk",
+        "Escritorio"
+      ]
+    },
+    "hot_tub": {
+      "*": ["Hot tub", "Jacuzzi", "Hidromasaje", "Bañera de hidromasaje", "Whirlpool"]
+    },
+    "sea_view": {
+      "*": ["Sea view", "Ocean view", "Vista al mar", "Vistas al mar", "Vista al océano"]
+    },
+    "mountain_view": {
+      "*": ["Mountain view", "Vista a la montaña", "Vistas a la montaña"]
+    },
+    "free_cancellation": {
+      "*": ["Free cancellation", "Cancelación gratuita", "Cancelación gratis"]
+    }
+  }
+}

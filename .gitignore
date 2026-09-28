@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+src/generated/
+.env
+.env.*
+!.env.example
+trip.config.json
+data/*
+!data/.gitkeep
+logs/*
+!logs/.gitkeep
+exports/*
+!exports/.gitkeep
+*.log
+.DS_Store

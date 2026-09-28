@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+src/generated
+prisma/migrations
+data
+logs
+exports
+pnpm-lock.yaml
+tests/fixtures
+AGENT_BRIEF.md

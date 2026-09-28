@@ -1,0 +1,71 @@
+[
+  { "code": "wifi", "labelEs": "Wi-Fi", "category": "conectividad", "isFamily": false },
+  { "code": "pool", "labelEs": "Piscina", "category": "piscina", "isFamily": true },
+  { "code": "pool_kids", "labelEs": "Piscina para niños", "category": "piscina", "isFamily": true },
+  { "code": "kitchen", "labelEs": "Cocina", "category": "cocina", "isFamily": true },
+  {
+    "code": "kitchenette",
+    "labelEs": "Cocina pequeña (kitchenette)",
+    "category": "cocina",
+    "isFamily": false
+  },
+  { "code": "washing_machine", "labelEs": "Lavarropas", "category": "lavanderia", "isFamily": true },
+  { "code": "dryer", "labelEs": "Secarropas", "category": "lavanderia", "isFamily": false },
+  { "code": "air_conditioning", "labelEs": "Aire acondicionado", "category": "clima", "isFamily": false },
+  { "code": "heating", "labelEs": "Calefacción", "category": "clima", "isFamily": false },
+  { "code": "parking", "labelEs": "Estacionamiento", "category": "estacionamiento", "isFamily": true },
+  {
+    "code": "parking_free",
+    "labelEs": "Estacionamiento gratuito",
+    "category": "estacionamiento",
+    "isFamily": false
+  },
+  { "code": "breakfast_included", "labelEs": "Desayuno incluido", "category": "comidas", "isFamily": true },
+  { "code": "crib", "labelEs": "Cuna", "category": "familia", "isFamily": true },
+  { "code": "high_chair", "labelEs": "Silla alta para bebés", "category": "familia", "isFamily": true },
+  { "code": "family_rooms", "labelEs": "Habitaciones familiares", "category": "familia", "isFamily": true },
+  { "code": "playground", "labelEs": "Área de juegos infantil", "category": "familia", "isFamily": true },
+  { "code": "kids_club", "labelEs": "Club infantil", "category": "familia", "isFamily": true },
+  { "code": "elevator", "labelEs": "Ascensor", "category": "accesibilidad", "isFamily": false },
+  {
+    "code": "accessible",
+    "labelEs": "Accesible (movilidad reducida)",
+    "category": "accesibilidad",
+    "isFamily": false
+  },
+  { "code": "pets_allowed", "labelEs": "Se admiten mascotas", "category": "mascotas", "isFamily": false },
+  { "code": "tv", "labelEs": "TV", "category": "entretenimiento", "isFamily": false },
+  { "code": "balcony", "labelEs": "Balcón", "category": "exterior", "isFamily": false },
+  { "code": "garden", "labelEs": "Jardín", "category": "exterior", "isFamily": false },
+  { "code": "bbq", "labelEs": "Parrilla / barbacoa", "category": "exterior", "isFamily": false },
+  { "code": "beach_access", "labelEs": "Acceso a la playa", "category": "exterior", "isFamily": false },
+  { "code": "gym", "labelEs": "Gimnasio", "category": "bienestar", "isFamily": false },
+  { "code": "spa", "labelEs": "Spa", "category": "bienestar", "isFamily": false },
+  { "code": "restaurant", "labelEs": "Restaurante", "category": "comidas", "isFamily": false },
+  { "code": "bar", "labelEs": "Bar", "category": "comidas", "isFamily": false },
+  {
+    "code": "room_service",
+    "labelEs": "Servicio a la habitación",
+    "category": "servicios",
+    "isFamily": false
+  },
+  {
+    "code": "airport_shuttle",
+    "labelEs": "Traslado al aeropuerto",
+    "category": "servicios",
+    "isFamily": false
+  },
+  { "code": "smoke_free", "labelEs": "Libre de humo", "category": "politicas", "isFamily": false },
+  { "code": "24h_reception", "labelEs": "Recepción 24 horas", "category": "servicios", "isFamily": false },
+  { "code": "fireplace", "labelEs": "Chimenea / hogar", "category": "clima", "isFamily": false },
+  { "code": "workspace", "labelEs": "Espacio de trabajo", "category": "trabajo", "isFamily": false },
+  { "code": "hot_tub", "labelEs": "Jacuzzi / hidromasaje", "category": "bienestar", "isFamily": false },
+  { "code": "sea_view", "labelEs": "Vista al mar", "category": "vistas", "isFamily": false },
+  { "code": "mountain_view", "labelEs": "Vista a la montaña", "category": "vistas", "isFamily": false },
+  {
+    "code": "free_cancellation",
+    "labelEs": "Cancelación gratuita",
+    "category": "politicas",
+    "isFamily": false
+  }
+]

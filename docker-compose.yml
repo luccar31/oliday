@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: viaje-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: viaje
+      POSTGRES_PASSWORD: viaje
+      POSTGRES_DB: viaje
+    ports:
+      - '5432:5432'
+    volumes:
+      - viaje_pgdata:/var/lib/postgresql/data
+      - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+volumes:
+  viaje_pgdata:
